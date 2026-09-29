@@ -1,0 +1,13 @@
+COMP503,Object Oriented Programming,15,S1 & S2,NONE
+COMP602,Software Development Practice,15,S1 & S2,COMP603
+COMP603,Programme Design and Construction,15,S1 & S2,COMP503
+COMP604,Operating Systems,15,S1 & S2,COMP503
+COMP610,Data Structures and Algorithms,15,S1 & S2,COMP503
+COMP611,Algorithm Design and Analysis,15,S2,COMP610
+COMP705,AI-Powered Software Development,15,S1,COMP603
+ENSE707,Software Quality Assurance,15,S2,COMP602
+COMP713,Distributed and Mobile Systems,15,S2,COMP611
+COMP721,Web Development,15,S1,COMP603
+COMP719,Applied Human Computer Interaction,15,S1 & S2,NONE
+COMP612,Computer Graphics Programming,15,S1 & S2,COMP610
+COMP710,Game Programming,15,S1,COMP612
