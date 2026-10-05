@@ -69,6 +69,23 @@ public class Paper {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Paper other = (Paper) obj;
+        return courseCode.equals(other.courseCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return courseCode.hashCode();
+    }
+
+    @Override
     public String toString() {
         String prereqText;
         if (hasPrerequisite()) { //if there is no prereq, prereq = 'None' when printing paper data because when reading paper data prereq is null
