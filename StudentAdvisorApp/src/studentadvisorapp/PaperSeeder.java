@@ -13,7 +13,7 @@ public class PaperSeeder {
     private PaperDAO paperDAO;
 
     public PaperSeeder() {
-        paperDAO = new PaperDAO();
+        paperDAO = new DerbyPaperDAO();
     }
 
     public void seedIfEmpty(String filePath) {

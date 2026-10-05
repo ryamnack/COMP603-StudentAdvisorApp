@@ -24,7 +24,7 @@ public class CompletedDAO {
 
     public CompletedDAO() {
         conn = DBManager.getInstance().getConnection();
-        paperDAO = new PaperDAO();
+        paperDAO = new DerbyPaperDAO();
     }
 
     public boolean addCompleted(String studentName, String paperCode) {
