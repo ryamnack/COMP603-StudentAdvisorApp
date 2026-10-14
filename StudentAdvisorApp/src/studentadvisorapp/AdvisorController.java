@@ -35,6 +35,7 @@ public class AdvisorController {
         
         frame.getLoginPanel().getContinueButton().addActionListener(e -> handleLogin());
         frame.getMenuPanel().getLogOut().addActionListener(e -> handleLogOut());
+        frame.getMenuPanel().getCloseApp().addActionListener(e -> handleExit());
     }
     
     //login controller
@@ -103,6 +104,16 @@ public class AdvisorController {
         student = null;
         frame.getLoginPanel().clear(); //empties name field
         frame.showCard(MainFrame.LOGIN); //gos to login panel
+    }
+    
+    //closes database and app
+    private void handleExit(){
+        int choice = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION);
+        if(choice == JOptionPane.YES_OPTION){
+            DBManager.getInstance().close(); //closes db conn
+            System.exit(0); //end programme
+        }
+        //if clicked no nothing happens
     }
         
     
