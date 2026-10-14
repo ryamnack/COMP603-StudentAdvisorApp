@@ -5,6 +5,7 @@
 package studentadvisorapp;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 
@@ -37,6 +38,7 @@ public class AdvisorController {
         frame.getMenuPanel().getLogOut().addActionListener(e -> handleLogOut());
         frame.getMenuPanel().getCloseApp().addActionListener(e -> handleExit());
         frame.getMenuPanel().getMarkPapersCompleted().addActionListener(e -> handleMarkPapersCompleted());
+        frame.getMenuPanel().getCheckCanTake().addActionListener(e -> handleCheckCanTake());
     }
 
     //login controller
@@ -143,7 +145,7 @@ public class AdvisorController {
                 if (paper == null) {
                     notFound += code + " ";
                 } else if (student.getPathway().hasCompleted(paper)) {
-                    alreadyDone += code + " ";
+                    alreadyDone += paper.getCourseCode() + " ";
                 } else if (completedDAO.addCompleted(student.getName(), paper.getCourseCode())) {
                     student.getPathway().addCompletedPaper(paper); //updates memory if db saved successfully
                     marked += paper.getCourseCode() + " ";
@@ -165,6 +167,40 @@ public class AdvisorController {
             message += "\nNot found: " + notFound + "\n";
         }
         JOptionPane.showMessageDialog(frame, message);
+    }
+    
+    private void handleCheckCanTake(){
+        String code = JOptionPane.showInputDialog(frame, "Enter paper code to check: ");
+        if(code == null){
+            return;
+        }
+        code = code.trim();
+        if(code.isEmpty()){
+            JOptionPane.showMessageDialog(frame, "Please enter a paper code.", "Nothing entered", JOptionPane.ERROR_MESSAGE);
+            return;
+            
+        }
+        
+        Paper paper = programme.findPaper(code);
+        if(paper == null){
+            JOptionPane.showMessageDialog(frame, "No paper found with code " + code + ".", "Paper not found", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(student.getPathway().hasCompleted(paper)){
+            JOptionPane.showMessageDialog(frame, "You have already completed " + paper.getCourseCode() + ".");
+            return;
+        }
+        
+        List<Paper> missing = student.getMissingPrerequisites(paper);
+        if(missing.isEmpty()){
+            JOptionPane.showMessageDialog(frame, "Yes you can take " + paper.getCourseCode() + ".");
+        }else{
+            String needed = "";
+            for (Paper p : missing){
+                needed += p.getCourseCode() + " ";
+            }
+            JOptionPane.showMessageDialog(frame, "Cant yet take " + paper.getCourseCode() + " you first need to complete: " + needed);
+        }
     }
 
     public static void main(String[] args) {
