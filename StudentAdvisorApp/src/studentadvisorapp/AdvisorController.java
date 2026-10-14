@@ -34,6 +34,7 @@ public class AdvisorController {
         }
         
         frame.getLoginPanel().getContinueButton().addActionListener(e -> handleLogin());
+        frame.getMenuPanel().getLogOut().addActionListener(e -> handleLogOut());
     }
     
     //login controller
@@ -95,6 +96,13 @@ public class AdvisorController {
         JOptionPane.showMessageDialog(frame, "Year level must be a number from 1 to 3.", "Invalid year", 
                                       JOptionPane.ERROR_MESSAGE);
         return null;
+    }
+    
+    //logs the current student out and returns to login screen
+    private void handleLogOut(){
+        student = null;
+        frame.getLoginPanel().clear(); //empties name field
+        frame.showCard(MainFrame.LOGIN); //gos to login panel
     }
         
     
