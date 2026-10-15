@@ -5,6 +5,8 @@
 package studentadvisorapp;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -39,6 +41,7 @@ public class AdvisorController {
         frame.getMenuPanel().getCloseApp().addActionListener(e -> handleExit());
         frame.getMenuPanel().getMarkPapersCompleted().addActionListener(e -> handleMarkPapersCompleted());
         frame.getMenuPanel().getCheckCanTake().addActionListener(e -> handleCheckCanTake());
+        frame.getMenuPanel().getDeleteCompletedPaper().addActionListener(e -> handleDeleteCompletedPaper());
     }
 
     //login controller
@@ -169,37 +172,69 @@ public class AdvisorController {
         JOptionPane.showMessageDialog(frame, message);
     }
     
+    //tells student if they can or cant take a paper and what prerequisites they are missing if any
     private void handleCheckCanTake(){
-        String code = JOptionPane.showInputDialog(frame, "Enter paper code to check: ");
-        if(code == null){
+        String code = JOptionPane.showInputDialog(frame, "Enter paper code to check: "); //input popup
+        if(code == null){ //cancel
             return;
         }
-        code = code.trim();
-        if(code.isEmpty()){
+        code = code.trim(); //trim white spaces
+        if(code.isEmpty()){ //error handling for blank input
             JOptionPane.showMessageDialog(frame, "Please enter a paper code.", "Nothing entered", JOptionPane.ERROR_MESSAGE);
             return;
             
         }
         
         Paper paper = programme.findPaper(code);
-        if(paper == null){
+        if(paper == null){ //error handling for incorrect paper
             JOptionPane.showMessageDialog(frame, "No paper found with code " + code + ".", "Paper not found", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(student.getPathway().hasCompleted(paper)){
+        if(student.getPathway().hasCompleted(paper)){ //output for if a paper is already completed
             JOptionPane.showMessageDialog(frame, "You have already completed " + paper.getCourseCode() + ".");
             return;
         }
         
         List<Paper> missing = student.getMissingPrerequisites(paper);
         if(missing.isEmpty()){
-            JOptionPane.showMessageDialog(frame, "Yes you can take " + paper.getCourseCode() + ".");
+            JOptionPane.showMessageDialog(frame, "Yes you can take " + paper.getCourseCode() + "."); //output for if student meets requiredments
         }else{
             String needed = "";
             for (Paper p : missing){
                 needed += p.getCourseCode() + " ";
             }
-            JOptionPane.showMessageDialog(frame, "Cant yet take " + paper.getCourseCode() + " you first need to complete: " + needed);
+            JOptionPane.showMessageDialog(frame, "Cant yet take " + paper.getCourseCode() + " you first need to complete: " + needed); //output for if student hasnt completed prerequisites
+        }
+    }
+    
+    //lets the student remove a paper the marked as completed
+    private void handleDeleteCompletedPaper(){
+        List<String> codes = new ArrayList<>(); //make list of completed papers
+        for(Paper p : student.getPathway().getPapersCompleted()){
+            codes.add(p.getCourseCode());
+        }
+        if(codes.isEmpty()){
+            JOptionPane.showMessageDialog(frame, "You havnt marked any papers completed yet.");
+            return;
+        }
+        Collections.sort(codes); //sort in order
+        String[] options = codes.toArray(new String[0]);
+        
+        //show dropdown of completed papers
+        Object choice = JOptionPane.showInputDialog(frame, "Choose paper to remove: ", "Remove completed paper", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        if(choice == null){ //cancel
+            return;
+        }
+        
+        String code = (String) choice;
+        Paper paper = programme.findPaper(code);
+        
+        //remove from database then memory
+        if(completedDAO.removeCompleted(student.getName(), code)){
+            student.getPathway().removeCompletedPaper(paper);
+            JOptionPane.showMessageDialog(frame, "Removed " + code + " from completed papers.");
+        }else{
+            JOptionPane.showMessageDialog(frame, "Couldnt remove " + code + ". Try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
