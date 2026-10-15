@@ -12,7 +12,7 @@ import java.util.List;
  * @author xrf6688
  */
 public class Programme {
-    public static final int pointsRequired = 360; //points needed to complete the programme, used for the progress report
+    public static final int pointsRequired = 120; //points needed to complete the programme, used for the progress report
     private String courseName;
     private List<Paper> papers;
 
