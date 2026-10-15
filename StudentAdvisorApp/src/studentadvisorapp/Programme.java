@@ -18,7 +18,7 @@ public class Programme {
 
     public Programme(String courseName) {
         this.courseName = courseName;
-        this.papers = new ArrayList();
+        this.papers = new ArrayList<>();
     }
 
     /**

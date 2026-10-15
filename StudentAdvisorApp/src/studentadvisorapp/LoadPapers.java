@@ -18,7 +18,7 @@ public class LoadPapers extends FileHandler {
     public void process() {
 
         programme = new Programme("Software Developement");
-        HashMap<String, String> prereqMap = new HashMap(); //collection to hold prereq data untill all paper objects are created
+        HashMap<String, String> prereqMap = new HashMap<>(); //collection to hold prereq data untill all paper objects are created
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) { //reading file holding papers
             String line;
