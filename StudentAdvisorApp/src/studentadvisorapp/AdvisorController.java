@@ -42,6 +42,7 @@ public class AdvisorController {
         frame.getMenuPanel().getMarkPapersCompleted().addActionListener(e -> handleMarkPapersCompleted());
         frame.getMenuPanel().getCheckCanTake().addActionListener(e -> handleCheckCanTake());
         frame.getMenuPanel().getDeleteCompletedPaper().addActionListener(e -> handleDeleteCompletedPaper());
+        frame.getMenuPanel().getExportProgressReport().addActionListener(e -> handleExportProgressReport());
     }
 
     //login controller
@@ -237,6 +238,20 @@ public class AdvisorController {
             JOptionPane.showMessageDialog(frame, "Couldnt remove " + code + ". Try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    //write progress report to a file and show popup
+    private void handleExportProgressReport(){
+        String path = "Progress_Report/" + student.getName() + "_progress.txt";
+        ExportProgressReport report = new ExportProgressReport(path, student);
+        report.process();
+        
+        if(report.isSaved()){ //only produces saved message if its saved
+            JOptionPane.showMessageDialog(frame, report.getReportText() + "\n\nSaved to " + path, "Progress Report", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(frame, "Progress report couldnt be saved.", "Export failed", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
 
     public static void main(String[] args) {
         new PaperSeeder().seedIfEmpty("Paper_Data/papers.txt");

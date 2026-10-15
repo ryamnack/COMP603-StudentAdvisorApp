@@ -4,15 +4,20 @@
  */
 package studentadvisorapp;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author calum
  */
 public class ExportProgressReport extends FileHandler { //class to inherit from FileHandler with method to output a report of points completed and remaining
-        private Student student;
+        private final Student student;
+        private boolean saved = false; //becomes true when file is written
+        private String reportText = "";
         public ExportProgressReport (String filePath, Student student){
             super(filePath);
             this.student = student;
@@ -20,16 +25,34 @@ public class ExportProgressReport extends FileHandler { //class to inherit from 
 
         @Override
         public void process(){
+            int pointsCompleted = student.getPathway().getPointsCompleted();
+            int pointsRemaining = Programme.pointsRequired - pointsCompleted;
+            List<Paper> completed = new ArrayList<>(student.getPathway().getPapersCompleted());
+            
+            reportText = "Progress report for " + student.getName() + "\nPoints completed: "
+                    + pointsCompleted + "\nPoints Remaining: " + pointsRemaining + " (out of " + Programme.pointsRequired + ")\n\nPapers Completed:\n";
+            
+            if(completed.isEmpty()){
+                reportText += "None";
+            }else{
+                for(Paper p : completed){
+                    reportText += p.getCourseCode() + " - " + p.getPoints() + " points\n";
+                }
+            }
+            new File(filePath).getParentFile().mkdirs(); //create Progress_Report if missing
+            
             try(FileWriter writer = new FileWriter(filePath)){
-                int pointsCompleted = student.getPathway().getPointsCompleted();
-                int pointsRemaining = Programme.pointsRequired - pointsCompleted; //points left to reach 360
-                String data = "Progress Report for " + student.getName() + "\n";
-                data += "Points Completed: " + pointsCompleted + "\n";
-                data += "Points Remaining: " + pointsRemaining + " (out of " + Programme.pointsRequired + ")";
-                writer.write(data); //write the data to the file
+                writer.write(reportText); //write the data to the file
+                saved = true;
             } catch (IOException e) {
                 handleError(e);
 
             }
+        }
+        public boolean isSaved(){
+            return saved;
+        }
+        public String getReportText(){
+            return reportText;
         }
     }
