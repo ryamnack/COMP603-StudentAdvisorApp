@@ -43,6 +43,8 @@ public class AdvisorController {
         frame.getMenuPanel().getCheckCanTake().addActionListener(e -> handleCheckCanTake());
         frame.getMenuPanel().getDeleteCompletedPaper().addActionListener(e -> handleDeleteCompletedPaper());
         frame.getMenuPanel().getExportProgressReport().addActionListener(e -> handleExportProgressReport());
+        frame.getMenuPanel().getViewPapers().addActionListener(e -> handleViewPapers());
+        frame.getPapersPanel().getBackButton().addActionListener(e -> frame.showCard(MainFrame.MENU));
     }
 
     //login controller
@@ -133,7 +135,7 @@ public class AdvisorController {
             JOptionPane.showMessageDialog(frame, "Please enter atleast one paper code.", "Nothing entered", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         //for result message
         String marked = "";
         String alreadyDone = "";
@@ -158,100 +160,115 @@ public class AdvisorController {
                 }
             }
         }
-        
+
         //summary message
         String message = "";
-        if(!marked.isEmpty()){
+        if (!marked.isEmpty()) {
             message += "Marked as completed: " + marked;
         }
-        if(!alreadyDone.isEmpty()){
+        if (!alreadyDone.isEmpty()) {
             message += "\nAlready completed: " + alreadyDone;
         }
-        if(!notFound.isEmpty()){
+        if (!notFound.isEmpty()) {
             message += "\nNot found: " + notFound + "\n";
         }
         JOptionPane.showMessageDialog(frame, message);
     }
-    
+
     //tells student if they can or cant take a paper and what prerequisites they are missing if any
-    private void handleCheckCanTake(){
+    private void handleCheckCanTake() {
         String code = JOptionPane.showInputDialog(frame, "Enter paper code to check: "); //input popup
-        if(code == null){ //cancel
+        if (code == null) { //cancel
             return;
         }
         code = code.trim(); //trim white spaces
-        if(code.isEmpty()){ //error handling for blank input
+        if (code.isEmpty()) { //error handling for blank input
             JOptionPane.showMessageDialog(frame, "Please enter a paper code.", "Nothing entered", JOptionPane.ERROR_MESSAGE);
             return;
-            
+
         }
-        
+
         Paper paper = programme.findPaper(code);
-        if(paper == null){ //error handling for incorrect paper
+        if (paper == null) { //error handling for incorrect paper
             JOptionPane.showMessageDialog(frame, "No paper found with code " + code + ".", "Paper not found", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(student.getPathway().hasCompleted(paper)){ //output for if a paper is already completed
+        if (student.getPathway().hasCompleted(paper)) { //output for if a paper is already completed
             JOptionPane.showMessageDialog(frame, "You have already completed " + paper.getCourseCode() + ".");
             return;
         }
-        
+
         List<Paper> missing = student.getMissingPrerequisites(paper);
-        if(missing.isEmpty()){
+        if (missing.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Yes you can take " + paper.getCourseCode() + "."); //output for if student meets requiredments
-        }else{
+        } else {
             String needed = "";
-            for (Paper p : missing){
+            for (Paper p : missing) {
                 needed += p.getCourseCode() + " ";
             }
             JOptionPane.showMessageDialog(frame, "Cant yet take " + paper.getCourseCode() + " you first need to complete: " + needed); //output for if student hasnt completed prerequisites
         }
     }
-    
+
     //lets the student remove a paper the marked as completed
-    private void handleDeleteCompletedPaper(){
+    private void handleDeleteCompletedPaper() {
         List<String> codes = new ArrayList<>(); //make list of completed papers
-        for(Paper p : student.getPathway().getPapersCompleted()){
+        for (Paper p : student.getPathway().getPapersCompleted()) {
             codes.add(p.getCourseCode());
         }
-        if(codes.isEmpty()){
+        if (codes.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "You havnt marked any papers completed yet.");
             return;
         }
         Collections.sort(codes); //sort in order
         String[] options = codes.toArray(new String[0]);
-        
+
         //show dropdown of completed papers
         Object choice = JOptionPane.showInputDialog(frame, "Choose paper to remove: ", "Remove completed paper", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        if(choice == null){ //cancel
+        if (choice == null) { //cancel
             return;
         }
-        
+
         String code = (String) choice;
         Paper paper = programme.findPaper(code);
-        
+
         //remove from database then memory
-        if(completedDAO.removeCompleted(student.getName(), code)){
+        if (completedDAO.removeCompleted(student.getName(), code)) {
             student.getPathway().removeCompletedPaper(paper);
             JOptionPane.showMessageDialog(frame, "Removed " + code + " from completed papers.");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(frame, "Couldnt remove " + code + ". Try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     //write progress report to a file and show popup
-    private void handleExportProgressReport(){
+    private void handleExportProgressReport() {
         String path = "Progress_Report/" + student.getName() + "_progress.txt";
         ExportProgressReport report = new ExportProgressReport(path, student);
         report.process();
-        
-        if(report.isSaved()){ //only produces saved message if its saved
+
+        if (report.isSaved()) { //only produces saved message if its saved
             JOptionPane.showMessageDialog(frame, report.getReportText() + "\n\nSaved to " + path, "Progress Report", JOptionPane.INFORMATION_MESSAGE);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(frame, "Progress report couldnt be saved.", "Export failed", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
+    //fills papers table and opens panel
+    private void handleViewPapers() {
+        PapersPanel panel = frame.getPapersPanel();
+        panel.clearTable(); //empty first otherwise rows pile up each time button is clicked
+
+        for (Paper p : programme.getPapers()) {
+            String prereq = "None";
+            if(p.hasPrerequisite()){
+                prereq = p.getPrerequisite().getCourseCode();
+            }
+                
+            panel.addPaperRow(p.getCourseCode(), p.getCourseName(), p.getPoints(), p.getSemester(), prereq);
+        }
+        frame.showCard(MainFrame.PAPERS);
+    }
 
     public static void main(String[] args) {
         new PaperSeeder().seedIfEmpty("Paper_Data/papers.txt");

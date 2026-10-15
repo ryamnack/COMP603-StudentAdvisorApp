@@ -17,11 +17,13 @@ public class MainFrame extends JFrame {
     //names for panels
     public static final String LOGIN = "Login";
     public static final String MENU = "Menu";
+    public static final String PAPERS = "Papers";
 
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cards = new JPanel(cardLayout);
     private final LoginPanel loginPanel = new LoginPanel();
     private final MenuPanel menuPanel = new MenuPanel();
+    private final PapersPanel papersPanel = new PapersPanel();
     
     public MainFrame() {
         setTitle("Virtual Academic Advisor");
@@ -31,6 +33,7 @@ public class MainFrame extends JFrame {
         
         cards.add(loginPanel, LOGIN);
         cards.add(menuPanel, MENU);
+        cards.add(papersPanel, PAPERS);
         add(cards);
     }
     
@@ -45,6 +48,10 @@ public class MainFrame extends JFrame {
 
     public MenuPanel getMenuPanel(){
         return menuPanel;
+    }
+    
+    public PapersPanel getPapersPanel(){
+        return papersPanel;
     }
     
 }
