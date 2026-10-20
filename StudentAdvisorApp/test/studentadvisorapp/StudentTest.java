@@ -1,11 +1,19 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package studentadvisorapp;
 
 import java.util.HashSet;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.List;
 import static org.junit.Assert.*;
 
+/**
+ *
+ * @author ydm7459
+ */
 public class StudentTest {
 
     private Paper comp501;
@@ -30,18 +38,17 @@ public class StudentTest {
     public void cannotTakePaperWhenPrerequisiteNotCompleted() {
         assertFalse(student.canTake(comp502));
     }
-    
-        @Test
+
+    @Test
     public void canTakePaperWhenPrerequisiteCompleted() {
         student.getPathway().addCompletedPaper(comp501);
         assertTrue(student.canTake(comp502));
     }
-    
-        @Test
+
+    @Test
     public void missingPrerequisitesListsWholeChain() {
         List<Paper> missing = student.getMissingPrerequisites(comp603);
         assertEquals(2, missing.size());
         assertTrue(missing.contains(comp501));
     }
 }
-
