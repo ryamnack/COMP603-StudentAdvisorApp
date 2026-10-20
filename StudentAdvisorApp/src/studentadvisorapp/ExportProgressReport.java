@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 public class ExportProgressReport extends FileHandler { //class to inherit from FileHandler with method to output a report of points completed and remaining
         private final Student student;

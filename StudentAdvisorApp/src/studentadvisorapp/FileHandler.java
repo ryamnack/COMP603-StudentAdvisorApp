@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 public abstract class FileHandler{ //to handle input and output of files
         protected String filePath;

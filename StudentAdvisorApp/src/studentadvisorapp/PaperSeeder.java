@@ -6,7 +6,7 @@ package studentadvisorapp;
 
 /**
  *
- * @author AUT
+ * @author ydm7459
  */
 public class PaperSeeder {
 

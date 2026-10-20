@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 public class LoginPanel extends JPanel{
     

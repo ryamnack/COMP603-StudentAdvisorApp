@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  *
- * @author AUT
+ * @author ydm7459
  */
 public interface PaperDAO {
 

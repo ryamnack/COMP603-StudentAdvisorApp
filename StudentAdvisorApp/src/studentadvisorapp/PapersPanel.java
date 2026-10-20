@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 public class PapersPanel extends JPanel{
     private final DefaultTableModel tableModel; //holds the table's data
