@@ -140,6 +140,7 @@ public class AdvisorController {
         String marked = "";
         String alreadyDone = "";
         String notFound = "";
+        String blocked = "";
 
         for (String code : input.split(",")) { //split and trim codes
             code = code.trim();
@@ -152,6 +153,12 @@ public class AdvisorController {
                     notFound += code + " ";
                 } else if (student.getPathway().hasCompleted(paper)) {
                     alreadyDone += paper.getCourseCode() + " ";
+                } else if (!student.getMissingPrerequisites(paper).isEmpty()) {
+                    String needs = "";
+                    for (Paper p : student.getMissingPrerequisites(paper)) {
+                        needs += p.getCourseCode() + " ";
+                    }
+                    blocked += paper.getCourseCode() + " (needs " + needs.trim() + ") ";
                 } else if (completedDAO.addCompleted(student.getName(), paper.getCourseCode())) {
                     student.getPathway().addCompletedPaper(paper); //updates memory if db saved successfully
                     marked += paper.getCourseCode() + " ";
@@ -171,6 +178,9 @@ public class AdvisorController {
         }
         if (!notFound.isEmpty()) {
             message += "\nNot found: " + notFound + "\n";
+        }
+        if (!blocked.isEmpty()) {
+            message += "\nNot marked, complete the prerequisites first: " + blocked;
         }
         JOptionPane.showMessageDialog(frame, message);
     }
@@ -269,7 +279,5 @@ public class AdvisorController {
         }
         frame.showCard(MainFrame.PAPERS);
     }
-
-   
 
 }
