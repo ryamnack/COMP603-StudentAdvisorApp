@@ -12,7 +12,7 @@ import java.sql.Statement;
 
 /**
  *
- * @author AUT
+ * @author ydm7459
  */
 public class DBManager {
 
