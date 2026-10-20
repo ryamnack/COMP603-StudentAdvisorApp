@@ -6,7 +6,7 @@ package studentadvisorapp;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 import java.util.HashSet;
 import org.junit.Before;

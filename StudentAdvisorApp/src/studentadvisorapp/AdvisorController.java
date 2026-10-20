@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 public class AdvisorController {
 

@@ -6,7 +6,7 @@ package studentadvisorapp;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 import org.junit.Before;
 import org.junit.Test;

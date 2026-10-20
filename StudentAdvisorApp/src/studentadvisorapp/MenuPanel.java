@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author calum
+ * @author xrf6688
  */
 public class MenuPanel extends JPanel{
     //buttons for each menu option
