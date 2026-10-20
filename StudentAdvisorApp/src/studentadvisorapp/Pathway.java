@@ -4,8 +4,6 @@
  */
 package studentadvisorapp;
 
-//TODO if possible: add minor object
-
 import java.util.Set;
 
 /**
@@ -16,7 +14,7 @@ public class Pathway {
     private Programme major;
     private Set<Paper> papersCompleted; //set so the same paper cant be marked completed twice
 
-    public Pathway(Programme major, /*Programme minor*/ Set<Paper> papersCompleted) {
+    public Pathway(Programme major, Set<Paper> papersCompleted) {
         this.major = major;
         this.papersCompleted = papersCompleted;
     }

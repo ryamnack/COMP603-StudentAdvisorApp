@@ -17,7 +17,7 @@ public class LoadPapers extends FileHandler {
     @Override
     public void process() {
 
-        programme = new Programme("Software Developement");
+        programme = new Programme("Software Development");
         HashMap<String, String> prereqMap = new HashMap<>(); //collection to hold prereq data untill all paper objects are created
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) { //reading file holding papers
@@ -34,7 +34,13 @@ public class LoadPapers extends FileHandler {
                 }
                 String code = parts[0];
                 String name = parts[1];
-                int points = Integer.parseInt(parts[2]);
+                int points;
+                try {
+                    points = Integer.parseInt(parts[2].trim());
+                } catch (NumberFormatException e) {
+                    System.out.println("Skipping line with invalid points: " + line);
+                    continue;
+                }
                 String semester = parts[3];
                 String prereqCode = parts[4];
 
